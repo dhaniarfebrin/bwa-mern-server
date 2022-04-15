@@ -34,7 +34,7 @@
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form action="/voucher/edit/?_method=PUT" method="POST" enctype="multipart/form-data">
+            <form action="/voucher/edit/<%= dataVoucher._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
               <div class="card-body">
                 <div class="form-group">
                     <label for="gameName">Nama Game</label>
@@ -59,7 +59,7 @@
                   <option selected="selected">Pilih kategori</option>
                   <% dataCategory.forEach( category => { %>
                     <option value="<%= category._id %>"
-                      <% if(category._id.toString() === dataVoucher?.category?._id.toString()) { //pake tanda tanyaa ? ? %>
+                      <% if(category._id.toString() === dataVoucher?.category?._id.toString()) { %>
                         selected 
                       <% } %> 
                     >
@@ -79,9 +79,17 @@
                       name="nominals"
                       required
                     >
-                    <% dataNominal.forEach( nominal => { %>
-                      <option value="<%= nominal._id %>"><%= nominal.coinName %> - <%= nominal.coinQuantity %></option>
-                    <% }) %>
+                    <%dataNominal.forEach( nominal => { %>
+                      <option value="<%= nominal._id %>"
+                        <% dataVoucher.nominals.forEach(voucherNominal => { %>
+                          <%if (nominal._id.toString() === voucherNominal._id.toString()) { %>
+                            selected
+                          <% } %> 
+                        <% }) %> 
+                      >
+                        <%= nominal.coinName %> - <%= nominal.coinQuantity %>
+                      </option>
+                    <%  }) %>
                     </select>
                     </div>
                   </div>
@@ -93,10 +101,9 @@
                       name="thumbnail"
                       id="thumbnail"
                       placeholder="Input thumbnail"
-                      required
                     />
                     <br>
-                    <img src="" id="preview-thumbnail">
+                    <img src="/uploads/<%= dataVoucher.thumbnail %> " alt="preview-thumbnail" id="preview-thumbnail" width="50%">
                 </div>
               </div>
               <!-- /.card-body -->
