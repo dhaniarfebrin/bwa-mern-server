@@ -37,16 +37,14 @@
           </td>
           <td class="row">
             <div class="mr-1">
-            <% if (data[i].status === 'Y') { %> 
-                <form action="">
-                    <button class="btn btn-sm btn-primary">Matikan</button>
-                </form>
-            <% } else { %>
-                <form action="">
-                    <button class="btn btn-sm btn-secondary">Hidupkan</button>
-                </form>
-            <% } %>
-        </div>
+              <form action="/voucher/edit_status/<%= data[i]._id %>?_method=PUT" method="POST">
+                <% if (data[i].status === 'Y') { %> 
+                    <button class="btn btn-sm btn-primary" type="submit">Matikan</button>
+                <% } else { %>
+                    <button class="btn btn-sm btn-secondary" type="submit">Hidupkan</button>
+                <% } %>
+              </form>
+            </div>
             <a href="/voucher/edit/<%= data[i]._id %>" class="btn btn-sm btn-info">Ubah</a>
             <form action="/voucher/delete/<%= data[i]._id %>?_method=DELETE" method="POST" class="ml-1">
               <button class="btn btn-sm btn-danger">Hapus</button>

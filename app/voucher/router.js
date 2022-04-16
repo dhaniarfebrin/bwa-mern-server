@@ -5,7 +5,7 @@ const router = express.Router()
 const multer = require('multer')
 const os = require('os')
 
-const { index, viewCreate, actionCreate, viewEdit, actionEdit, actionDelete } = require('./controller')
+const { index, viewCreate, actionCreate, viewEdit, actionEdit, actionDelete, actionStatus } = require('./controller')
 
 // router pages
 router.get('/', index)
@@ -16,5 +16,6 @@ router.get('/edit/:id', viewEdit)
 router.post('/create', multer({ dest: os.tmpdir() }).single('thumbnail'), actionCreate)
 router.put('/edit/:id', multer({ dest: os.tmpdir() }).single('thumbnail'), actionEdit)
 router.delete('/delete/:id', actionDelete)
+router.put('/edit_status/:id', actionStatus)
 
 module.exports = router
