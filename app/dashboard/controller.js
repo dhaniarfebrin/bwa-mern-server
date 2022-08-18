@@ -9,5 +9,4 @@ module.exports =  {
             console.log("there's something went wrong")
         }
     },
-    
 }

@@ -17,8 +17,8 @@ module.exports = {
 
       // Populate will automatically replace the specified path in the document, with document(s) from other collection(s).
       const data = await Voucher.find()
-      .populate('nominals')
-      .populate('category') // mengambil data, dan memanipulasi
+      .populate('nominals') // mengambil data, dan memanipulasi sesuai id-nya
+      .populate('category') // mengambil data, dan memanipulasi sesuai id-nya
 
       res.render("admin/voucher/view_voucher", { data, alert });
     } catch (err) {

@@ -1,0 +1,44 @@
+<table id="example2" class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Nomor</th>
+        <th>Tipe Pembayaran</th>
+        <th>Banks</th>
+        <th>Status</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for(let i = 0; i < data.length; i++) { %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><%= data[i].type %></td>
+          <td>
+            <% data[i].banks.forEach(bank => { %>
+                <span class="badge badge-primary">
+                    <%= bank.name %> - <%= bank.nameBank %> - <%= bank.noRekening %>  
+                </span>
+            <% }) %>    
+        </td>
+            <td>
+                <% if(data[i].status === "Y") { %>
+                    <span class="badge badge-success">
+                        Aktif
+                    </span>
+                <% } else { %>
+                    <span class="badge badge-secondary">
+                        Tidak Aktif
+                    </span>
+                <% } %> 
+            </td>
+          <td class="row">
+            <a href="/payment/edit/<%= data[i]._id %>" class="btn btn-sm btn-info">Ubah</a>
+            <form action="/payment/delete/<%= data[i]._id %>?_method=DELETE" method="POST" class="ml-1">
+              <button class="btn btn-sm btn-danger">Hapus</button>
+            </form>
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+  
