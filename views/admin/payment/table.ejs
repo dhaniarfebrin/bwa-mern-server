@@ -32,6 +32,13 @@
                 <% } %> 
             </td>
           <td class="row">
+            <form action="/payment/edit_status/<%= data[i]._id %>?_method=PUT" method="POST" class="mr-1">
+              <button class="btn btn-sm 
+                <%= data[i].status === 'Y' ? 'btn-success' : 'btn-secondary' %> 
+              ">
+                <%= data[i].status === 'Y' ? 'Matikan' : 'Hidupkan' %> 
+              </button>
+            </form>
             <a href="/payment/edit/<%= data[i]._id %>" class="btn btn-sm btn-info">Ubah</a>
             <form action="/payment/delete/<%= data[i]._id %>?_method=DELETE" method="POST" class="ml-1">
               <button class="btn btn-sm btn-danger">Hapus</button>
