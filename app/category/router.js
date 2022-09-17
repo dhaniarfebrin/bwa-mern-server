@@ -7,6 +7,9 @@ var router = express.Router();
 // import controller
 const { index, viewCreate, actionCreate, viewEdit, actionEdit, actionDelete } = require("./controller") 
 
+const {isLoginAdmin} = require('../middleware/auth')
+
+router.use(isLoginAdmin)
 // page route
 router.get("/", index)
 router.get("/create", viewCreate)

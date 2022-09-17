@@ -3,6 +3,9 @@ const router = express.Router();
 
 const {index, viewCreate, actionCreate, viewEdit, actionEdit, actionDelete} = require("./controller");
 
+const {isLoginAdmin} = require('../middleware/auth')
+
+router.use(isLoginAdmin)
 // ruters of pages
 router.get('/', index)
 router.get('/create', viewCreate)
