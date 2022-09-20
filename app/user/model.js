@@ -5,7 +5,7 @@
 const mongoose = require('mongoose')
 
 // penentuan struktur collection
-let usersSchema = mongoose.Schema({
+let userSchema = mongoose.Schema({
     email: {
         type: String,
         require: [true, 'email harus diisi']
@@ -34,4 +34,4 @@ let usersSchema = mongoose.Schema({
     },
 }, { timestamps: true })
 
-module.exports = mongoose.model('Users', usersSchema)
+module.exports = mongoose.model('User', userSchema)

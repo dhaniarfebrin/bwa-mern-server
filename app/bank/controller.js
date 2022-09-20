@@ -12,7 +12,7 @@ module.exports = {
             res.render("admin/bank/view_bank", { data, alert });
         } catch (err) {
             req.flash("alertMessage", `${err.message}`);
-            req.status("alertStatus", `danger`);
+            req.flash("alertStatus", `danger`);
             res.redirect("/bank");
         }
     },
@@ -21,7 +21,7 @@ module.exports = {
             res.render('admin/bank/create.ejs')
         } catch (err) {
             req.flash("alertMessage", `${err.message}`);
-            req.status("alertStatus", `danger`);
+            req.flash("alertStatus", `danger`);
             res.redirect("/bank");
         }
     },
@@ -37,7 +37,7 @@ module.exports = {
           res.redirect("/bank");
         } catch (err) {
           req.flash("alertMessage", `${err.message}`);
-          req.status("alertStatus", `danger`);
+          req.flash("alertStatus", `danger`);
           res.redirect("/bank");
         }
       },
@@ -50,7 +50,7 @@ module.exports = {
             res.render('admin/bank/edit.ejs', {data})
         } catch (err) {
             req.flash("alertMessage", `${err.message}`);
-            req.status("alertStatus", `danger`);
+            req.flash("alertStatus", `danger`);
             res.redirect("/bank");
         }
     },
@@ -66,7 +66,7 @@ module.exports = {
             res.redirect("/bank");
         } catch (err) {
             req.flash("alertMessage", `${err.message}`);
-            req.status("alertStatus", `danger`);
+            req.flash("alertStatus", `danger`);
             res.redirect("/bank");
         }
     },
@@ -81,7 +81,7 @@ module.exports = {
             res.redirect("/bank");
         } catch (err) {
             req.flash("alertMessage", `${err.message}`);
-            req.status("alertStatus", `danger`);
+            req.flash("alertStatus", `danger`);
             res.redirect("/bank");
         }
     }

@@ -16,10 +16,11 @@ module.exports = {
 
       } catch (err) {
         req.flash("alertMessage", `${err.message}`);
-        req.status("alertStatus", `danger`);
+        req.flash("alertStatus", `danger`);
         res.redirect("/");
       }
     },
+
     actionSignIn: async (req, res) => {
       try {
         const { email, password } = req.body
@@ -60,10 +61,11 @@ module.exports = {
 
       } catch (error) {
         req.flash("alertMessage", `${err.message}`);
-        req.status("alertStatus", `danger`);
+        req.flash("alertStatus", `danger`);
         res.redirect("/");
       }
     },
+    
     actionLogOut: async (req, res) => {
       req.session.destroy()
       res.redirect('/')

@@ -13,7 +13,7 @@ module.exports = {
       res.render("admin/payment/view_payment", { data, alert });
     } catch (err) {
       req.flash("alertMessage", `${err.message}`);
-      req.status("alertStatus", `danger`);
+      req.flash("alertStatus", `danger`);
       res.redirect("/payment");
     }
   },
@@ -23,7 +23,7 @@ module.exports = {
         res.render("admin/payment/create", {banks});
     } catch (err) {
       req.flash("alertMessage", `${err.message}`);
-      req.status("alertStatus", `danger`);
+      req.flash("alertStatus", `danger`);
       res.redirect("/payment");
     }
   },
@@ -42,7 +42,7 @@ module.exports = {
       res.redirect("/payment");
     } catch (err) {
       req.flash("alertMessage", `${err.message}`);
-      req.status("alertStatus", `danger`);
+      req.flash("alertStatus", `danger`);
       res.redirect("/payment");
     }
   },
@@ -56,7 +56,7 @@ module.exports = {
       res.render("admin/payment/edit", { dataPayment, dataBank });
     } catch (err) {
       req.flash("alertMessage", `${err.message}`);
-      req.status("alertStatus", `danger`);
+      req.flash("alertStatus", `danger`);
       res.redirect("/payment");
     }
   },
@@ -75,7 +75,7 @@ module.exports = {
       res.redirect("/payment");
     } catch (err) {
       req.flash("alertMessage", `${err.message}`);
-      req.status("alertStatus", `danger`);
+      req.flash("alertStatus", `danger`);
       res.redirect("/payment");
     }
   },
@@ -90,7 +90,7 @@ module.exports = {
       res.redirect("/payment");
     } catch (err) {
       req.flash("alertMessage", `${err.message}`);
-      req.status("alertStatus", `danger`);
+      req.flash("alertStatus", `danger`);
       res.redirect("/payment");
     }
   },
@@ -99,7 +99,7 @@ module.exports = {
       const { id } = req.params
 
       const payment = await Payment.findOne({_id: id})
-      let status = payment.status === 'Y' ? 'N' : 'Y'
+      let status = payment.flash === 'Y' ? 'N' : 'Y'
       
       await Payment.findOneAndUpdate({_id: id}, {status})
 

@@ -1,0 +1,57 @@
+<table id="example2" class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Nomor</th>
+        <th>Nama Game</th>
+        <th>Item</th>
+        <th>Total Harga</th>
+        <th>Status</th>
+        <th>Nama Player</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for(let i = 0; i < data.length; i++) { %>
+        <tr>
+            <td><%= i + 1 %></td>
+            <td><%= data[i]?.historyVoucherTopup?.gameName %></td>
+            <td>
+                <%= data[i]?.historyVoucherTopup?.coinQuantity %> 
+                <%= data[i]?.historyVoucherTopup?.coinName %>
+            </td> <!-- pake tanda tanya ngab data[i]?.category?.name ?? '-' -->
+            <td>
+                Rp. <%= data[i].value %> 
+            </td>
+            <td>
+            <% if(data[i].status === "pending") { %>
+                <span class="badge badge-warning">
+                    <%= data[i].status %> 
+                </span>
+            <% } else if(data[i].status === "success") { %>
+                <span class="badge badge-success">
+                    <%= data[i].status %> 
+                </span>
+            <% } else { %>
+                <span class="badge badge-danger">
+                    <%= data[i].status %> 
+                </span>
+            <% } %> 
+          </td>
+
+          <td>
+            <%= data[i]?.player?.name ?? '-' %> 
+          </td>
+
+          <td class="row">
+            <form action="/transaction/status/<%= data[i]._id %>?_method=PUT" method="POST" class="ml-1">
+              <button class="btn btn-sm btn-danger">Tolak</button>
+            </form>
+            <form action="/transaction/status/<%= data[i]._id %>?_method=PUT" method="POST" class="ml-1">
+              <button class="btn btn-sm btn-info">Terima</button>
+            </form>
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+  
