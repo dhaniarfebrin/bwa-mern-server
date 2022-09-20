@@ -43,10 +43,10 @@
           </td>
 
           <td class="row">
-            <form action="/transaction/status/<%= data[i]._id %>?_method=PUT" method="POST" class="ml-1">
+            <form action="/transaction/status/<%= data[i]._id %>?status=failed&_method=PUT" method="POST" class="ml-1">
               <button class="btn btn-sm btn-danger">Tolak</button>
             </form>
-            <form action="/transaction/status/<%= data[i]._id %>?_method=PUT" method="POST" class="ml-1">
+            <form action="/transaction/status/<%= data[i]._id %>?status=success&_method=PUT" method="POST" class="ml-1">
               <button class="btn btn-sm btn-info">Terima</button>
             </form>
           </td>
