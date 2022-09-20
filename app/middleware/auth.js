@@ -5,6 +5,7 @@ module.exports = {
             req.flash("alertStatus", "danger");
             res.redirect("/");
         } else {
+            res.locals.user = req.session.user; // middleware to make 'user' available to all templates
             next()
         }
     }

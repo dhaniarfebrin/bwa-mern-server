@@ -26,6 +26,7 @@ module.exports = {
         const user = await Users.findOne({ email: email })
 
         if (user) {
+
           if (user.status === 'Y') {
             const checkPassword = await bcrypt.compare(password, user.password)
 
@@ -50,6 +51,7 @@ module.exports = {
             req.flash("alertStatus", "danger");
             res.redirect("/");
           }
+          
         } else {
           req.flash("alertMessage", "email yang diinputkan tidak terdaftar");
           req.flash("alertStatus", "danger");
@@ -61,5 +63,9 @@ module.exports = {
         req.status("alertStatus", `danger`);
         res.redirect("/");
       }
+    },
+    actionLogOut: async (req, res) => {
+      req.session.destroy()
+      res.redirect('/')
     }
 }
