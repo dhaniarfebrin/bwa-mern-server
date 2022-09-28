@@ -43,12 +43,14 @@
           </td>
 
           <td class="row">
+            <% if(data[i].status === "pending") {%> 
             <form action="/transaction/status/<%= data[i]._id %>?status=failed&_method=PUT" method="POST" class="ml-1">
               <button class="btn btn-sm btn-danger">Tolak</button>
             </form>
             <form action="/transaction/status/<%= data[i]._id %>?status=success&_method=PUT" method="POST" class="ml-1">
               <button class="btn btn-sm btn-info">Terima</button>
             </form>
+            <% } %> 
           </td>
         </tr>
       <% } %>
