@@ -4,6 +4,10 @@
 
 const mongoose = require('mongoose')
 
+// buat encrypt password
+const bcrypt = require('bcryptjs')
+const HASH_ROUND = 10
+
 // penentuan struktur collection
 let playerSchema = mongoose.Schema({
     email: {
@@ -35,10 +39,34 @@ let playerSchema = mongoose.Schema({
     avatar:  {
         type: String
     },
+    fileName: {
+        type: String
+    },
     phoneNumber: {
         type: String,
         require: [true, 'phone number harus diisi']
     },
+    favorite: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category'
+    }
 }, { timestamps: true })
+
+// fungsi validasi jika email sudah terdaftar
+playerSchema.path('email').validate(async function(value) {
+    try {
+        const count = await this.model('Player').countDocuments({email: value})
+        return !count
+    } catch (err) {
+        throw err
+    }
+}, attr => `${attr.value} sudah terdaftar`)
+
+// fungsi ini dieksekusi ketika ada data yang akan di tambahkan ke database
+playerSchema.pre('save', function(next) {
+    //encrypt password ges
+    this.password = bcrypt.hashSync(this.password, HASH_ROUND)
+    next()
+})
 
 module.exports = mongoose.model('Player', playerSchema)

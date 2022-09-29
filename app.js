@@ -20,6 +20,7 @@ const paymentRouter = require('./app/payment/router');
 const userRouter = require('./app/user/router')
 const transactionRouter = require('./app/transaction/router')
 const playerRouter = require('./app/player/router')
+const authRouter = require('./app/auth/router')
 
 const app = express(); // initiate express
 const URL = '/api/v1'
@@ -61,6 +62,7 @@ app.use('/transaction', transactionRouter);
 
 // API
 app.use(`${URL}/players`, playerRouter)
+app.use(`${URL}/auth`, authRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
