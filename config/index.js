@@ -8,5 +8,6 @@ module.exports = {
   rootPath: path.resolve(__dirname, '..'),
   serviceName: process.env.SERVICE_NAME,
   urlDb: process.env.MONGO_URL,
-  PORT: process.env.PORT // custom port
+  PORT: process.env.PORT, // custom port
+  jwtKey: process.env.SECRET
 };
