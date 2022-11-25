@@ -1,4 +1,4 @@
-// model nominal menggunakan mongoose
+// model transaction menggunakan mongoose
 // untuk collection klo di mongoDB
 // dan akan di export ke controller
 
@@ -29,7 +29,7 @@ let transactionSchema = mongoose.Schema({
         minLength: [3, 'harus berisi 3 - 225 karakter']
     },
 
-    accountName: {
+    accountUser: {
         type: String,
         require: [true, 'nama akun harus diisi'],
         maxLength: [225, 'harus berisi 3 - 225 karakter'],
@@ -72,10 +72,10 @@ let transactionSchema = mongoose.Schema({
         ref: 'Category'
     },
     
-    user: [{
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-    }]
+    }
 
 }, { timestamps: true })
 
