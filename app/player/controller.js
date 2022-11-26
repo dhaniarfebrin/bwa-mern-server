@@ -46,29 +46,29 @@ module.exports = {
   },
   checkout: async (req, res) => {
     try {
-      const { accountUser, name, nominal, voucher , payment, bank } = req.body
+      const { accountUser, name, nominal, voucher , payment, bank } = req.body // mengambil data dari req.body
 
-      const res_voucher = await Voucher.findOne({ _id: voucher })
-        .select('gameName category _id thumbnail user')
-        .populate('category').populate('user')
-      if (!res_voucher) return res.status(404).json({ message: "voucher game tidak ditemukan." })
+      const res_voucher = await Voucher.findOne({ _id: voucher }) // mengambil data voucher sesuai req dari body
+        .select('gameName category _id thumbnail user') // memilih field apa saja yang ingin diambil
+        .populate('category').populate('user') // menimpa dokumen yang reference sesuai dengan data aslinya
+      if (!res_voucher) return res.status(404).json({ message: "voucher game tidak ditemukan." }) // validasi jika data tidak ada
 
-      const res_nominal = await Nominal.findOne({_id: nominal})
-      if (!res_nominal) return res.status(404).json({ message: "nominal tidak ditemukan." })
+      const res_nominal = await Nominal.findOne({_id: nominal}) // mengambil data nominal sesuai req body
+      if (!res_nominal) return res.status(404).json({ message: "nominal tidak ditemukan." }) // validasi jika data tidak ada
 
-      const res_payment = await Payment.findOne({_id: payment}).populate('banks')
-      if (!res_payment) return res.status(404).json({ message: "payment tidak ditemukan." })
+      const res_payment = await Payment.findOne({_id: payment}).populate('banks') // mengambil data payment sesuai req body
+      if (!res_payment) return res.status(404).json({ message: "payment tidak ditemukan." }) // validasi jika data tidak ada
       
-      const res_bank = await Bank.findOne({_id: bank})
-      if (!res_bank) return res.status(404).json({ message: "Bank tidak ditemukan." })
+      const res_bank = await Bank.findOne({_id: bank}) // mengambil data bank sesuai req dari body
+      if (!res_bank) return res.status(404).json({ message: "Bank tidak ditemukan." }) // validasi jika data tidak ada
 
       let tax = (10 / 100) * res_nominal._doc.price // set pajak ke 10%
       let value = res_nominal._doc.price + tax // harga final + ppn
 
-      const payload = {
+      const payload = { // membuat data untuk transaksi
         historyVoucherTopUp: {
           gameName: res_voucher._doc.gameName,
-          category: res_voucher._doc.category ? res_voucher._doc.category.name : '',
+          category: res_voucher._doc.category ? res_voucher._doc.category.name : "",
           thumbnail: res_voucher._doc.thumbnail,
           coinName: res_nominal._doc.coinName,
           coinQuantity: res_nominal._doc.coinQuantity,
@@ -93,10 +93,10 @@ module.exports = {
         user: res_voucher._doc.user?._id
       }
 
-      const transaction = new Transaction(payload)
-      await transaction.save()
+      const transaction = new Transaction(payload) // membuat schema baru untuk data transaksi
+      await transaction.save() // menyimpan data transaksi
 
-      res.status(201).json({data: transaction})
+      res.status(201).json({data: transaction}) // mengirim respon data yang sudah tersimpan ke client
 
     } catch (err) {
       res.status(500).json({message: err.message || `Internal server error`})

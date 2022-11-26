@@ -10,23 +10,23 @@ module.exports = {
             req.flash("alertStatus", "danger");
             res.redirect("/");
         } else {
-            res.locals.user = req.session.user; // middleware to make 'user' available to all templates
+            res.locals.user = req.session.user; // middleware to make 'user' available to all templates (keperluan tampilan)
             next()
         }
     },
     isLoginPlayer: async (req, res, next) => {
         try {
-            const token = req.headers.authorization ? req.headers.authorization.replace('Bearer ', '') : null
+            const token = req.headers.authorization ? req.headers.authorization.replace('Bearer ', '') : null // ambil token yang aktif dari header
 
-            const data = jwt.verify(token, config.jwtKey)
+            const data = jwt.verify(token, config.jwtKey) // verify token dengan config-nya
 
-            const player = await Player.findOne({ _id: data.player.id })
+            const player = await Player.findOne({ _id: data.player.id }) // ambil data player sesuai id nya
 
             if (!player) {
-                throw new Error()
+                throw new Error() // kalo ga ada datanya, throw error
             }
 
-            req.player = player
+            req.player = player // set data player untuk keperluan checkout transaksi
             req.token = token
             next()
 
