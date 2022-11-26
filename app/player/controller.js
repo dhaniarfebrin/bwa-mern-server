@@ -48,6 +48,8 @@ module.exports = {
     try {
       const { accountUser, name, nominal, voucher , payment, bank } = req.body // mengambil data dari req.body
 
+      console.log(req.player);
+
       const res_voucher = await Voucher.findOne({ _id: voucher }) // mengambil data voucher sesuai req dari body
         .select('gameName category _id thumbnail user') // memilih field apa saja yang ingin diambil
         .populate('category').populate('user') // menimpa dokumen yang reference sesuai dengan data aslinya
@@ -94,9 +96,53 @@ module.exports = {
       }
 
       const transaction = new Transaction(payload) // membuat schema baru untuk data transaksi
-      await transaction.save() // menyimpan data transaksi
+      await transaction.save() // menyimpan data ke collection transaksi
 
       res.status(201).json({data: transaction}) // mengirim respon data yang sudah tersimpan ke client
+
+    } catch (err) {
+      res.status(500).json({message: err.message || `Internal server error`})
+    }
+  },
+  historyTransaction: async (req, res) => {
+    try {
+      // kita akan mengambil data transaksi dan ada filter sesuai statusnya, dan juga kita membuat total uang yang dihabiskan untuk membeli voucher di setiap transaksinya
+
+      const { status = '' } = req.query // menangkap inputan dari query url untuk status filternya
+
+      let criteria = {} // deklarasi criteria untuk memanggil transaksi sesuai dengan kriteria
+      // kenapa kosong? untuk bisa ditambah - tambah datanya dengan dinamis
+
+      if (status.length) { // jika ada req status nya
+        criteria = { // mendeklarasikan ulang criteria
+          ...criteria, // memasukkan value (isi) dari criteria yang sebelumnya
+          status: { $regex: `${status}`, $options: 'i' } // ya menambahkan status sebagai kriteria
+        }
+      }
+
+      if(req.player._id) { // jika ada user login
+        criteria = { // mendeklarasikan ulang criteria
+          ...criteria, // memasukkan value (isi) dari criteria yang sebelumnya
+          player: req.player._id // menambahkan object player sebagai criteria
+        } // req.player di dapat dari hasil decode token user yang login dari middleware
+      }
+
+      const historyTransaction = await Transaction.find(criteria) // memanggil data sesuai criteria yang sudah dideklarasikan
+
+      let totalValue = await Transaction.aggregate([ // ini mau membuat data total uang
+        {$match: criteria}, // mengambil data uang sesuai kriteria
+        {
+          $group: {
+            _id: null,
+            value: {$sum: "$value"} // menjumlahkan total uang yang dihabiskan player dalam membeli voucher
+          }
+        }
+      ])
+
+      res.status(200).json({ 
+        data: historyTransaction, // data transaksi sesuai statusnya
+        total: totalValue.length ? totalValue[0].value : 0 // jumlah yang dihabiskan sesuai berapa banyak transaksinya
+      })
 
     } catch (err) {
       res.status(500).json({message: err.message || `Internal server error`})

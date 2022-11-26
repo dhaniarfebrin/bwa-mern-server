@@ -14,19 +14,19 @@ module.exports = {
             next()
         }
     },
-    isLoginPlayer: async (req, res, next) => {
+    isLoginPlayer: async (req, res, next) => { // validasi ketika player melakukan aktivitas dengan mencocokkan token dari player
         try {
             const token = req.headers.authorization ? req.headers.authorization.replace('Bearer ', '') : null // ambil token yang aktif dari header
 
-            const data = jwt.verify(token, config.jwtKey) // verify token dengan config-nya
+            const data = jwt.verify(token, config.jwtKey) // convert token, dan menjadikannya data yang utuh dari user
 
-            const player = await Player.findOne({ _id: data.player.id }) // ambil data player sesuai id nya
+            const player = await Player.findOne({ _id: data.player.id }) // ambil data player sesuai id dari tokennya
 
             if (!player) {
                 throw new Error() // kalo ga ada datanya, throw error
             }
 
-            req.player = player // set data player untuk keperluan checkout transaksi
+            req.player = player // mendeklarasikan player di sisi server untuk keperluan aktivitas di dalam dashboard nanti
             req.token = token
             next()
 

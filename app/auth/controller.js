@@ -80,7 +80,7 @@ module.exports = {
             if (player) {
                 const checkPassword = bcrypt.compareSync(password, player.password)
                 if (checkPassword) {
-                    const token = jwt.sign({
+                    const token = jwt.sign({ // untuk build token buat login dan keperluan aktivitas yang sangat strict
                         player: {
                             id: player.id,
                             username: player.username,
@@ -89,7 +89,7 @@ module.exports = {
                             phoneNumber: player.phoneNumber,
                             avatar: player.avatar
                         }
-                    }, config.jwtKey)
+                    }, config.jwtKey) // untuk build token buat login dan keperluan aktivitas yang sangat strict
 
                     res.status(200).json({ data: {token} })
                 } else {
