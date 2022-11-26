@@ -127,9 +127,9 @@ module.exports = {
         } // req.player di dapat dari hasil decode token user yang login dari middleware
       }
 
-      const historyTransaction = await Transaction.find(criteria) // memanggil data sesuai criteria yang sudah dideklarasikan
+      const historyTransaction = await Transaction.find(criteria) // memanggil data transaksi sesuai criteria yang sudah dideklarasikan
 
-      let totalValue = await Transaction.aggregate([ // ini mau membuat data total uang
+      let totalValue = await Transaction.aggregate([ // ini mau membuat data total uang yang dihabiskan berdasarkan id player yang sama
         {$match: criteria}, // mengambil data uang sesuai kriteria
         {
           $group: {
@@ -157,6 +157,35 @@ module.exports = {
       if (!historyTransaction) return res.status(404).json({ message: "history tidak ditemukan" })
 
       res.status(200).json({ data: historyTransaction })
+    } catch (err) {
+      res.status(500).json({message: err.message || `Internal server error`})
+    }
+  },
+  dashboard: async (req, res) => {
+    try {
+      const count = await Transaction.aggregate([ // mengelompokkan sesuai kategori dan menjumlahkan semua uang yang dihanbiskan dari transaksi per kategori yang sama
+        {$match: {player: req.player._id}}, // mengambil data transaksi sesuai id player
+        {
+          $group: {
+            _id: '$category', // mengelompokkan category yang sama jadi satu
+            value: {$sum: '$value'} // menjumlahkan semua total uang yang dihabiskan berdasarkan kelompok kategori yang sama
+          }
+        }
+      ])
+      const category = await Category.find()
+
+      category.forEach(element => {
+        count.forEach(data => {
+          if (data._id.toString() === element._id.toString()) {
+            data.name = element.name // menambah field nama kategori
+          }
+        })
+      })
+
+      // mengambil semua data riwayat transaksi dari player, lalu mengurutkannya berdasarkan updatedAt Descending
+      const history = await Transaction.find({ player: req.player._id }).populate('category').sort({'updatedAt': -1})
+
+      res.status(200).json({ data: history, count: count })
     } catch (err) {
       res.status(500).json({message: err.message || `Internal server error`})
     }
