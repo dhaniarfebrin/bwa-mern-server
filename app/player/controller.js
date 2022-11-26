@@ -116,7 +116,7 @@ module.exports = {
       if (status.length) { // jika ada req status nya
         criteria = { // mendeklarasikan ulang criteria
           ...criteria, // memasukkan value (isi) dari criteria yang sebelumnya
-          status: { $regex: `${status}`, $options: 'i' } // ya menambahkan status sebagai kriteria
+          status: { $regex: `${status}`, $options: 'i' } // ya menambahkan status sebagai kriteria untuk pemanggilan data
         }
       }
 
@@ -144,6 +144,19 @@ module.exports = {
         total: totalValue.length ? totalValue[0].value : 0 // jumlah yang dihabiskan sesuai berapa banyak transaksinya
       })
 
+    } catch (err) {
+      res.status(500).json({message: err.message || `Internal server error`})
+    }
+  },
+  historyTransactionDetail: async (req, res) => { // menampilkan history detail berdasarkan id nya
+    try {
+      const { id } = req.params
+
+      const historyTransaction = await Transaction.findOne({ _id: id })
+
+      if (!historyTransaction) return res.status(404).json({ message: "history tidak ditemukan" })
+
+      res.status(200).json({ data: historyTransaction })
     } catch (err) {
       res.status(500).json({message: err.message || `Internal server error`})
     }
