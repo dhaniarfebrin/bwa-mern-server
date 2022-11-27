@@ -65,7 +65,7 @@ module.exports = {
       if (!res_bank) return res.status(404).json({ message: "Bank tidak ditemukan." }) // validasi jika data tidak ada
 
       let tax = (10 / 100) * res_nominal._doc.price // set pajak ke 10%
-      let value = res_nominal._doc.price + tax // harga final + ppn
+      let value = res_nominal._doc.price + tax // harga final + pajak
 
       const payload = { // membuat data untuk transaksi
         historyVoucherTopUp: {
@@ -163,7 +163,7 @@ module.exports = {
   },
   dashboard: async (req, res) => {
     try {
-      const count = await Transaction.aggregate([ // mengelompokkan sesuai kategori dan menjumlahkan semua uang yang dihanbiskan dari transaksi per kategori yang sama
+      const count = await Transaction.aggregate([ // mengelompokkan sesuai kategori dan menjumlahkan semua uang yang dihabiskan dari transaksi per kategori yang sama
         {$match: {player: req.player._id}}, // mengambil data transaksi sesuai id player
         {
           $group: {
@@ -172,12 +172,13 @@ module.exports = {
           }
         }
       ])
+
       const category = await Category.find()
 
       category.forEach(element => {
         count.forEach(data => {
-          if (data._id.toString() === element._id.toString()) {
-            data.name = element.name // menambah field nama kategori
+          if (data._id.toString() === element._id.toString()) { // jika transaksi mempunyai kategori yang sama dari daftar kategori maka
+            data.name = element.name // menambah field nama kategori di dalam data count
           }
         })
       })
@@ -186,6 +187,24 @@ module.exports = {
       const history = await Transaction.find({ player: req.player._id }).populate('category').sort({'updatedAt': -1})
 
       res.status(200).json({ data: history, count: count })
+    } catch (err) {
+      res.status(500).json({message: err.message || `Internal server error`})
+    }
+  },
+  profile: async (req, res) => {
+    try {
+
+      const player = {
+        id: req.player._id,
+        username: req.player.username,
+        email: req.player.email,
+        name: req.player.name,
+        avatar: req.player.avatar,
+        phoneNumber: req.player.phoneNumber
+      }
+      
+      res.status(200).json({ data: player })
+
     } catch (err) {
       res.status(500).json({message: err.message || `Internal server error`})
     }
