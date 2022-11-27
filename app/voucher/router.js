@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-// tambahan karena ada upload image
+// tambahan karena ada upload file
 const multer = require('multer')
 const os = require('os')
 

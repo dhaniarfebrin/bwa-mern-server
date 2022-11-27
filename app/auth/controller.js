@@ -15,11 +15,14 @@ module.exports = {
 
             if(req.file) {
                 let tmp_path = req.file.path;
+
                 let originalExt =
                 req.file.originalname.split(".")[
                     req.file.originalname.split(".").length - 1
                 ];
+
                 let filename = req.file.filename + "." + originalExt;
+                
                 let target_path = path.resolve(
                 config.rootPath,
                 `public/uploads/${filename}`

@@ -4,6 +4,12 @@ const Nominal = require('../nominal/model')
 const Payment = require('../payment/model')
 const Bank = require('../bank/model')
 const Transaction = require('../transaction/model')
+const Player = require('./model')
+
+// tambahan buat upload image
+const path = require("path");
+const fs = require("fs");
+const config = require("../../config");
 
 module.exports = {
   landingPage: async (req, res) => {
@@ -207,6 +213,94 @@ module.exports = {
 
     } catch (err) {
       res.status(500).json({message: err.message || `Internal server error`})
+    }
+  },
+  editProfile: async (req, res, next) => {
+    try {
+      const { name = "", phoneNumber = "" } = req.body
+
+      let payload = {}
+
+      if (name.length) payload.name = name
+      if (phoneNumber.length) payload.phoneNumber = phoneNumber
+
+      if (req.file) {
+        let tmp_path = req.file.path;
+
+        let originalExt =
+          req.file.originalname.split(".")[
+            req.file.originalname.split(".").length - 1
+          ];
+
+        // ini file barunya gan
+        let filename = req.file.filename + "." + originalExt;
+        // file barunya gan
+
+        let target_path = path.resolve(
+          config.rootPath,
+          `public/uploads/${filename}`
+        );
+
+        const src = fs.createReadStream(tmp_path);
+        const dest = fs.createWriteStream(target_path);
+
+        src.pipe(dest);
+
+        src.on("end", async () => {
+            let player = await Player.findOne({_id: req.player._id})
+            
+            // menghapus file image sebelumnya
+            let currentImage = `${config.rootPath}/public/uploads/${player.avatar}`
+            if(fs.existsSync(currentImage)) {
+              fs.unlinkSync(currentImage)
+            }
+
+            // update data
+            player = await Player.findOneAndUpdate({_id: req.player.id}, 
+                {
+                  ...payload,
+                  avatar: filename
+                },
+                { new: true, runValidators: true } // return the document after update was applied.
+              );
+
+            res.status(201).json({
+              data: {
+                id: player._id,
+                name: player.name,
+                phoneNumber: player.phoneNumber,
+                avatar: player.avatar
+              }
+            })
+        });
+
+        src.on("error", async () => {
+          next(error)
+        })
+      } else {
+        const player = await Player.findOneAndUpdate({
+          _id: req.player._id // dari token login
+        }, payload, { new: true, runValidators: true })
+
+        res.status(201).json({
+          data: {
+            id: player._id,
+            name: player.name,
+            phoneNumber: player.phoneNumber,
+            avatar: player.avatar
+          }
+        })
+      }
+
+    } catch (err) {
+      // res.status(500).json({message: err.message || `Internal server error`})
+      if (err && err.name === 'ValidationError') {
+        res.status(422).json({
+          error: 1,
+          message: err.message,
+          fields: err.errors
+        })
+      }
     }
   }
 }
