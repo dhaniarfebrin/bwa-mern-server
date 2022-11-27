@@ -5,6 +5,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors')
 
 const session = require('express-session') // express session
 const flash = require('connect-flash') // connect flash
@@ -24,6 +25,7 @@ const authRouter = require('./app/auth/router')
 
 const app = express(); // initiate express
 const URL = '/api/v1'
+app.use(cors())
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
