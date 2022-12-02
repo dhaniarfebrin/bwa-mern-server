@@ -1,13 +1,11 @@
-<%- include ../../partials/header.ejs %>
-<%- include ../../partials/navbar.ejs %>
-<%- include ../../partials/sidebar.ejs %>
-
+<%- include('../../partials/header.ejs') %> <%- include('../../partials/navbar.ejs')
+%> <%- include('../../partials/sidebar.ejs') %>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
-        <%- include ../../partials/alertMessage.ejs %> 
+        <%- include('../../partials/alertMessage.ejs') %> 
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1>Kategori</h1>
@@ -38,7 +36,7 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <%- include ./table.ejs %>
+                <%- include('./table.ejs') %> 
               </div>
               <!-- /.card-body -->
             </div>
@@ -54,5 +52,4 @@
 </div>
 <!-- /.content-wrapper -->
 
-<%- include ../../partials/footer.ejs %>
-<%- include ../../partials/js.ejs %>
+<%- include('../../partials/footer.ejs') %> <%- include('../../partials/js.ejs') %>
